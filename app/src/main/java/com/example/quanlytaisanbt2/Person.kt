@@ -37,25 +37,29 @@ data class Person(
         }
     }
 
-    private fun addAsset(newAsset: Asset) {
-        // tìm tài sản đã tồn tại
+    fun addAsset(newAsset: Asset) {
+        // Tìm tài sản đã tồn tại
         val existingAsset = assets.find { it.getName() == newAsset.getName() }
         if (existingAsset != null) {
-            // cộng dồn số lượng cho tài sản đã tồn tại
+            // Cộng dồn số lượng cho tài sản đã tồn tại
             existingAsset.quantity += newAsset.quantity
         } else {
-            // thêm tài sản mới vào danh sách
+            // Thêm tài sản mới vào danh sách
             assets.add(newAsset)
         }
-        // cập nhật tổng giá trị tài sản
+        // Cập nhật tổng giá trị tài sản
         totalValue = assets.sumOf { it.value * it.quantity }
+
     }
 
-    private fun getAssetsInfo(): String {
+
+    fun getAssetsInfo(): String {
         return assets.joinToString("\n") { asset ->
             "   * ${asset.quantity} ${asset.getName()}: ${(asset.value * asset.quantity).formatMoney()}"
         }
     }
+
+
 
     fun getTotalValue():Long{
         return totalValue

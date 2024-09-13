@@ -7,6 +7,8 @@
     <string name="TV_ListAssets">Tài sản: Xe ô tô, Xe máy, Điện thoại</string>
     <string name="Add">Thêm</string>
     <string name="ViewResult">Xem kết quả</string>
+    <string name="textviewListPeople">Danh sách Con người</string>
+    <string name="textviewListAsset">Danh sách Tài sản</string>
 
 
 </resources>

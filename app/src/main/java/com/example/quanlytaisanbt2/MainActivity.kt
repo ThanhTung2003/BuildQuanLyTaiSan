@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
         val personList = mutableListOf<Person>()
         val assetList = mutableListOf<Asset>()
+        var currentPerson:Person? = null
+
 
         val radioGroupPeopleAndAsset = findViewById<RadioGroup>(R.id.radioGroupPeopleAndAsset)
         val layoutPeople = findViewById<LinearLayout>(R.id.layoutPeople)
@@ -58,20 +60,27 @@ class MainActivity : AppCompatActivity() {
             if (personName.isNotEmpty()) {
                 val newPerson = Person(personName)
                 personList.add(newPerson)
+                currentPerson = newPerson
                 Log.d("baitap2", "Đã thêm con người: $personName")
             } else {
                 Log.d("baitap2", "Vui lòng nhập tên con người")
             }
             editTextPeople.setText("")
         }
+
         buttonAddAsset.setOnClickListener {
             val assetName = editTextAsset.text.toString()
             val assetValue = editTextValueAsset.text.toString().toLongOrNull()
 
             if (assetName.isNotEmpty() && assetValue != null) {
                 val newAsset = Asset(assetName, assetValue)
-                assetList.add(newAsset)
-                Log.d("baitap2", "Đã thêm tài sản: $assetName : ${assetValue.formatMoney()} vnđ")
+
+                // Kiểm tra xem có người hiện tại để thêm tài sản hay không
+                currentPerson?.let { person ->
+                    // Thêm tài sản vào người hiện tại
+                    person.addAsset(newAsset)
+                    Log.d("baitap2", "Đã thêm tài sản: $assetName : ${assetValue.formatMoney()} cho ${person.getName()}")
+                } ?: Log.d("baitap2", "Không có người để thêm tài sản")
             } else {
                 Log.d("baitap2", "Vui lòng nhập tên và giá trị tài sản hợp lệ")
             }
@@ -79,53 +88,33 @@ class MainActivity : AppCompatActivity() {
             editTextValueAsset.setText("")
         }
 
-        findViewById<TextView>(R.id.showResult).setOnClickListener {
-            Log.d("baitap2", "Danh sách con người:")
-            personList.forEach { person -> Log.d("baitap2", "- ${person.getName()}") }
-            Log.d("baitap2", "Danh sách tài sản:")
-            assetList.forEach { asset ->
-                Log.d(
-                    "baitap2",
-                    " - ${asset.getName()}: ${asset.value.formatMoney()} vnđ"
-                )
+
+
+        findViewById<TextView>(R.id.personResult).setOnClickListener {
+            Log.d("baitap2", "- Thống kê danh sách đối tượng:")
+
+            assetList.forEach { assets ->
+                Log.d("baitap2", "${assets.getInfoStatistical()}")
             }
+            personList.forEach { person ->
+                Log.d("baitap2", "${person.getInfoStatistical()}")
+            }
+
         }
 
         findViewById<TextView>(R.id.assetResults).setOnClickListener {
-            Log.d("baitap2", "Danh sách con người:")
-            personList.forEach { person -> Log.d("baitap2", "- ${person.getName()}") }
-            Log.d("baitap2", "Danh sách tài sản:")
-            assetList.forEach { asset ->
-                Log.d(
-                    "baitap2",
-                    " - ${asset.getName()}: ${asset.value.formatMoney()} vnđ"
-                )
+            Log.d("baitap2", "- Thống kê danh sách đối tượng:")
+
+            // In ra danh sdách con người
+            personList.forEach { person ->
+                Log.d("baitap2", "+ ${person.getName()}: Con người")
             }
+
+            // In ra danh sách tài sản
+            assetList.forEach { asset ->
+                Log.d("baitap2", "+ ${asset.getName()}: Tài sản")
+            }
+
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("baitap2", "onStart")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("baitap2", "onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("baitap2", "OnPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("baitap2", "OnStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("baitap2", "OnDestroy")
     }
 }
