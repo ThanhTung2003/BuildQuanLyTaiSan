@@ -1,6 +1,7 @@
 package com.example.quanlytaisanbt2
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -113,7 +114,7 @@ class MainActivity : AppCompatActivity() {
             binding.editTextPeople.text.clear()
         }
 
-        fun viewResult() {
+            fun viewResult() {
             val builder = StringBuilder()
             Log.d(BT2, "xem kết quả")
             builder.append("- Thống kê danh sách đối tượng:\n")
@@ -131,6 +132,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.personResult.setOnClickListener {
             viewResult()
+            val intentMain: Intent = Intent(this@MainActivity, ResultsScreen::class.java)
+            startActivity(intentMain)
+            Log.d(BT2, "Chuyển sang màn hình kết quả")
         }
 
         binding.assetResults.setOnClickListener {

@@ -9,6 +9,7 @@
     <string name="ViewResult">Xem kết quả</string>
     <string name="textviewListPeople">Danh sách Con người</string>
     <string name="textviewListAsset">Danh sách Tài sản</string>
+    <string name="buttonBack">Thoát</string>
 
 
 </resources>
