@@ -11,14 +11,13 @@ import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.d("baitap2", "onCreate")
+        Log.d(BT2, "onCreate")
 
         val personList = mutableListOf<Person>()
         val assetList = mutableListOf<Asset>()
@@ -32,35 +31,32 @@ class MainActivity : AppCompatActivity() {
 
         binding.layoutPeople.visibility = View.VISIBLE
         binding.layoutAssets.visibility = View.GONE
-        Log.d("baitap2", "View mặc định")
+        Log.d(BT2, "View mặc định")
 
         binding.radioGroupPeopleAndAsset.setOnCheckedChangeListener { _, checkid ->
             when (checkid) {
                 R.id.radiobuttonPeople -> {
                     binding.layoutPeople.visibility = View.VISIBLE
                     binding.layoutAssets.visibility = View.GONE
-                    Log.d("baitap2", "View Con người")
+                    Log.d(BT2, PERSONVIEW)
 
                 }
                 R.id.radiobuttonAsset -> {
                     binding.layoutPeople.visibility = View.GONE
                     binding.layoutAssets.visibility = View.VISIBLE
-                    Log.d("baitap2", "View Tài sản")
+                    Log.d(BT2, ASSETVIEW)
 
                 }
             }
         }
 
         fun updateTextListAssets() {
-
             val assetsInfo = currentPersonAssets.joinToString(", ") { it.getName() }
             binding.textListAssets.text = assetsInfo
         }
 
         fun addAssetToCurrentPerson(asset: Asset) {
-
             currentPersonAssets.add(asset)
-
             updateTextListAssets()
         }
 
@@ -81,14 +77,13 @@ class MainActivity : AppCompatActivity() {
                 updatePeopleAdapter()
                 currentPersonAssets.clear()
                 updateTextListAssets()
-                Log.d("baitap2", "Thêm $name thành công")
+                Log.d(BT2, "Thêm $name thành công")
             } else {
-                Log.d("baitap2", "$name chưa thêm tài sản")
+                Log.d(BT2, "$name chưa thêm tài sản")
             }
         }
 
         fun updateAssetsListView() {
-
             val assetsInfo = assetList.map { asset -> "${asset.getName()} - ${asset.value.formatMoney()}" }
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, assetsInfo)
             binding.assetListView.adapter = adapter
@@ -106,9 +101,9 @@ class MainActivity : AppCompatActivity() {
                 binding.editTextAsset.text.clear()
                 binding.editTextValueAsset.text.clear()
                 updateAssetsListView()
-                Log.d("baitap2", "Thêm $assetName thành công với giá: ${assetValue.formatMoney()}")
+                Log.d(BT2, "Thêm $assetName thành công với giá: ${assetValue.formatMoney()}")
             } else {
-                Log.d("baitap2", "Chưa điền tên hoặc giá tài sản")
+                Log.d(BT2, "Chưa điền tên hoặc giá tài sản")
             }
         }
 
@@ -120,19 +115,18 @@ class MainActivity : AppCompatActivity() {
 
         fun viewResult() {
             val builder = StringBuilder()
+            Log.d(BT2, "xem kết quả")
             builder.append("- Thống kê danh sách đối tượng:\n")
-
 
             personList.forEach { person ->
                 builder.append(person.getInfoStatistical()).append("\n")
             }
 
-
             assetList.forEach { asset ->
                 builder.append(asset.getInfoStatistical()).append("\n")
             }
 
-            Log.d("baitap2", builder.toString())
+            Log.d(BT2, builder.toString())
         }
 
         binding.personResult.setOnClickListener {
@@ -142,5 +136,11 @@ class MainActivity : AppCompatActivity() {
         binding.assetResults.setOnClickListener {
             viewResult()
         }
+
+    }
+    companion object {
+        private const val BT2 = "baitap2"
+        private const val PERSONVIEW = "View Con người"
+        private const val ASSETVIEW = "View Tài sản"
     }
 }

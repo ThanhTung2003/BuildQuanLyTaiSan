@@ -27,16 +27,12 @@ data class Person(
         return name
     }
 
-    override fun getcategory(): String {
+    override fun getCategory(): String {
         return category
     }
 
     override fun getInfo(): String {
         return "$name: $totalValue "
-    }
-
-    fun getCategory(): String {
-        return category
     }
 
     fun addAssetList(asset: Asset, quantity: Int) {

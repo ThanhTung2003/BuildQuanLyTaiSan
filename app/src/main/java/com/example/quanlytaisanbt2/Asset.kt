@@ -16,7 +16,7 @@ data class Asset(
         return "$name: ${(value).formatMoney()} "
     }
 
-    override fun getcategory(): String {
+    override fun getCategory(): String {
         return category
     }
 
