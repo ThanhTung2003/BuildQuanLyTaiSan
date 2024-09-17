@@ -4,30 +4,31 @@ import android.util.Log
 import com.example.quanlytaisanbt2.UI.formatMoney
 
 data class Person(
-    private val name: String,
+    val name: String,
     private var totalValue: Long = 0,
     private val category: String = "Con người"
-):Object {
+) {
 
     private val assets = mutableListOf<Asset>()
 
-    override fun getName():String {
+    // Đổi tên phương thức getName() thành getPersonName() để tránh xung đột
+    fun getPersonName(): String {
         return name
     }
 
     fun getInfoTax(isFee: Boolean = true): String {
-        var result = "  + ${getName()}: ${getTotalValue().formatMoney()}"
+        var result = "  + ${getPersonName()}: ${getTotalValue().formatMoney()}"
         if (!isFee) {
             result += "\n${getAssetsInfo()}"
         }
         return result
     }
 
-    override fun getInfo(): String {
-        return "$name: $totalValue vnđ"
+    fun getInfo(): String {
+        return "$name: $totalValue "
     }
 
-    override fun getcategory(): String {
+    fun getCategory(): String {
         return category
     }
 
@@ -49,9 +50,7 @@ data class Person(
         }
         // Cập nhật tổng giá trị tài sản
         totalValue = assets.sumOf { it.value * it.quantity }
-
     }
-
 
     fun getAssetsInfo(): String {
         return assets.joinToString("\n") { asset ->
@@ -59,10 +58,14 @@ data class Person(
         }
     }
 
-
-
-    fun getTotalValue():Long{
+    fun getTotalValue(): Long {
         return totalValue
     }
+
+    fun getFullInfo(): String {
+        val assetsInfo = assets.joinToString(", ") { it.getInfo() }
+        return "$name: $assetsInfo"
+    }
+
 
 }

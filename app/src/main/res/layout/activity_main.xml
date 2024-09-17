@@ -61,14 +61,26 @@
             android:background="@drawable/edit_text_border"
             android:hint="@string/Hint_TypeName"/>
 
-        <TextView
-            android:id="@+id/textViewListAssets"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
-            android:text="@string/TV_ListAssets"
-            android:textColor="@color/textAssets" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewListAssets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/TV_ListAssets"
+                android:textColor="@color/textAssets" />
+
+            <TextView
+                android:id="@+id/textListAssets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/buttonAddPeople"
@@ -183,6 +195,8 @@
         <ListView
             android:id="@+id/peopleListView"
             android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </ListView>
@@ -200,15 +214,12 @@
         <ListView
             android:id="@+id/assetListView"
             android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
-
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

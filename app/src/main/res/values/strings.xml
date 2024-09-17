@@ -4,7 +4,7 @@
     <string name="People">Con người</string>
     <string name="Hint_TypeName">Nhập tên</string>
     <string name="Hint_TypeValue">Nhập giá trị</string>
-    <string name="TV_ListAssets">Tài sản: Xe ô tô, Xe máy, Điện thoại</string>
+    <string name="TV_ListAssets">Tài sản: </string>
     <string name="Add">Thêm</string>
     <string name="ViewResult">Xem kết quả</string>
     <string name="textviewListPeople">Danh sách Con người</string>

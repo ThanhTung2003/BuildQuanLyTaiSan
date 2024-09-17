@@ -13,7 +13,7 @@ data class Asset(
     }
 
     override fun getInfo(): String {
-        return "$name: ${(value).formatMoney()} vnđ"
+        return "$name: ${(value).formatMoney()} "
     }
 
     override fun getcategory(): String {

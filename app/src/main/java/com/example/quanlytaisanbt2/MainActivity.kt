@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ListView
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -23,8 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         val personList = mutableListOf<Person>()
         val assetList = mutableListOf<Asset>()
-        var currentPerson:Person? = null
-
+        val totalAssetsList = mutableListOf<Asset>()
+        val currentPersonAssets = mutableListOf<Asset>()
 
         val radioGroupPeopleAndAsset = findViewById<RadioGroup>(R.id.radioGroupPeopleAndAsset)
         val layoutPeople = findViewById<LinearLayout>(R.id.layoutPeople)
@@ -34,6 +36,15 @@ class MainActivity : AppCompatActivity() {
         val editTextAsset = findViewById<EditText>(R.id.editTextAsset)
         val editTextValueAsset = findViewById<EditText>(R.id.editTextValueAsset)
         val buttonAddAsset = findViewById<Button>(R.id.buttonAddAsset)
+        val peopleListView = findViewById<ListView>(R.id.peopleListView)
+        val assetListView = findViewById<ListView>(R.id.assetListView)
+        val textListAssets = findViewById<TextView>(R.id.textListAssets)
+
+        val peopleAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, personList.map { it.getPersonName() })
+        val assetAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, assetList.map { it.getInfo() })
+
+        peopleListView.adapter = peopleAdapter
+        assetListView.adapter = assetAdapter
 
         layoutPeople.visibility = View.VISIBLE
         layoutAssets.visibility = View.GONE
@@ -44,28 +55,59 @@ class MainActivity : AppCompatActivity() {
                 R.id.radiobuttonPeople -> {
                     layoutPeople.visibility = View.VISIBLE
                     layoutAssets.visibility = View.GONE
-                    Log.d("baitap2", "View con người")
-                }
+                    Log.d("baitap2", "View Con người")
 
+                }
                 R.id.radiobuttonAsset -> {
                     layoutPeople.visibility = View.GONE
                     layoutAssets.visibility = View.VISIBLE
-                    Log.d("baitap2", "View tài sản")
+                    Log.d("baitap2", "View Tài sản")
+
                 }
             }
         }
 
-        buttonAddPeople.setOnClickListener {
-            val personName = editTextPeople.text.toString()
-            if (personName.isNotEmpty()) {
-                val newPerson = Person(personName)
-                personList.add(newPerson)
-                currentPerson = newPerson
-                Log.d("baitap2", "Đã thêm con người: $personName")
+        fun updateTextListAssets() {
+
+            val assetsInfo = currentPersonAssets.joinToString(", ") { it.getName() }
+            textListAssets.text = assetsInfo
+        }
+
+        fun addAssetToCurrentPerson(asset: Asset) {
+
+            currentPersonAssets.add(asset)
+
+            updateTextListAssets()
+        }
+
+        fun updatePeopleAdapter() {
+            peopleAdapter.clear()
+            peopleAdapter.addAll(personList.map { it.getFullInfo() })
+            peopleAdapter.notifyDataSetChanged()
+        }
+
+        fun savePerson(name: String) {
+            if (name.isNotEmpty() && currentPersonAssets.isNotEmpty()) {
+                val person = Person(name)
+
+                currentPersonAssets.forEach { asset ->
+                    person.addAsset(asset)
+                }
+                personList.add(person)
+                updatePeopleAdapter()
+                currentPersonAssets.clear()
+                updateTextListAssets()
+                Log.d("baitap2", "Thêm $name thành công")
             } else {
-                Log.d("baitap2", "Vui lòng nhập tên con người")
+                Log.d("baitap2", "$name chưa thêm tài sản")
             }
-            editTextPeople.setText("")
+        }
+
+        fun updateAssetsListView() {
+
+            val assetsInfo = assetList.map { asset -> "${asset.getName()}: ${asset.value.formatMoney()}" }
+            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, assetsInfo)
+            assetListView.adapter = adapter
         }
 
         buttonAddAsset.setOnClickListener {
@@ -73,48 +115,23 @@ class MainActivity : AppCompatActivity() {
             val assetValue = editTextValueAsset.text.toString().toLongOrNull()
 
             if (assetName.isNotEmpty() && assetValue != null) {
-                val newAsset = Asset(assetName, assetValue)
-
-                // Kiểm tra xem có người hiện tại để thêm tài sản hay không
-                currentPerson?.let { person ->
-                    // Thêm tài sản vào người hiện tại
-                    person.addAsset(newAsset)
-                    Log.d("baitap2", "Đã thêm tài sản: $assetName : ${assetValue.formatMoney()} cho ${person.getName()}")
-                } ?: Log.d("baitap2", "Không có người để thêm tài sản")
+                val asset = Asset(assetName, assetValue)
+                assetList.add(asset)
+                assetAdapter.notifyDataSetChanged()
+                addAssetToCurrentPerson(asset) // add tài sản vào người hiện tại
+                editTextAsset.text.clear()
+                editTextValueAsset.text.clear()
+                updateAssetsListView()
+                Log.d("baitap2", "Thêm $assetName thành công với giá: ${assetValue.formatMoney()}")
             } else {
-                Log.d("baitap2", "Vui lòng nhập tên và giá trị tài sản hợp lệ")
+                Log.d("baitap2", "Chưa điền tên hoặc giá tài sản")
             }
-            editTextAsset.setText("")
-            editTextValueAsset.setText("")
         }
 
-
-
-        findViewById<TextView>(R.id.personResult).setOnClickListener {
-            Log.d("baitap2", "- Thống kê danh sách đối tượng:")
-
-            assetList.forEach { assets ->
-                Log.d("baitap2", "${assets.getInfoStatistical()}")
-            }
-            personList.forEach { person ->
-                Log.d("baitap2", "${person.getInfoStatistical()}")
-            }
-
-        }
-
-        findViewById<TextView>(R.id.assetResults).setOnClickListener {
-            Log.d("baitap2", "- Thống kê danh sách đối tượng:")
-
-            // In ra danh sdách con người
-            personList.forEach { person ->
-                Log.d("baitap2", "+ ${person.getName()}: Con người")
-            }
-
-            // In ra danh sách tài sản
-            assetList.forEach { asset ->
-                Log.d("baitap2", "+ ${asset.getName()}: Tài sản")
-            }
-
+        buttonAddPeople.setOnClickListener {
+            val personName = editTextPeople.text.toString()
+            savePerson(personName)
+            editTextPeople.text.clear()
         }
     }
 }
