@@ -4,14 +4,13 @@ import android.util.Log
 import com.example.quanlytaisanbt2.UI.formatMoney
 
 data class Person(
-    val name: String,
+    private val name: String,
     private var totalValue: Long = 0,
     private val category: String = "Con người"
-) {
+):Object {
 
     private val assets = mutableListOf<Asset>()
 
-    // Đổi tên phương thức getName() thành getPersonName() để tránh xung đột
     fun getPersonName(): String {
         return name
     }
@@ -24,7 +23,15 @@ data class Person(
         return result
     }
 
-    fun getInfo(): String {
+    override fun getName(): String {
+        return name
+    }
+
+    override fun getcategory(): String {
+        return category
+    }
+
+    override fun getInfo(): String {
         return "$name: $totalValue "
     }
 
@@ -63,7 +70,7 @@ data class Person(
     }
 
     fun getFullInfo(): String {
-        val assetsInfo = assets.joinToString(", ") { it.getInfo() }
+        val assetsInfo = assets.joinToString(", ") { it.getName() }
         return "$name: $assetsInfo"
     }
 

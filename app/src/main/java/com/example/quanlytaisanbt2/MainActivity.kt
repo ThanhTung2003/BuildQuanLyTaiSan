@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         val peopleListView = findViewById<ListView>(R.id.peopleListView)
         val assetListView = findViewById<ListView>(R.id.assetListView)
         val textListAssets = findViewById<TextView>(R.id.textListAssets)
+        val personResult = findViewById<TextView>(R.id.personResult)
+        val assetResult = findViewById<TextView>(R.id.assetResults)
 
         val peopleAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, personList.map { it.getPersonName() })
         val assetAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, assetList.map { it.getInfo() })
@@ -105,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
         fun updateAssetsListView() {
 
-            val assetsInfo = assetList.map { asset -> "${asset.getName()}: ${asset.value.formatMoney()}" }
+            val assetsInfo = assetList.map { asset -> "${asset.getName()} - ${asset.value.formatMoney()}" }
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, assetsInfo)
             assetListView.adapter = adapter
         }
@@ -132,6 +134,28 @@ class MainActivity : AppCompatActivity() {
             val personName = editTextPeople.text.toString()
             savePerson(personName)
             editTextPeople.text.clear()
+        }
+
+        fun viewResult() {
+            val builder = StringBuilder()
+            builder.append("- Thống kê danh sách đối tượng:\n")
+
+            // Thêm tất cả "Con người"
+            personList.forEach { person ->
+                builder.append(person.getInfoStatistical()).append("\n")
+            }
+
+            // Thêm tất cả "Tài sản"
+            assetList.forEach { asset ->
+                builder.append(asset.getInfoStatistical()).append("\n")
+            }
+
+            // Hiển thị kết quả trên Logcat
+            Log.d("baitap2", builder.toString())
+        }
+
+        personResult.setOnClickListener {
+            viewResult()
         }
     }
 }
