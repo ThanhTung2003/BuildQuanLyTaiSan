@@ -1,11 +1,8 @@
-package com.example.quanlytaisanbt2
+package com.example.quanlytaisanbt2.layout
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
 import com.example.quanlytaisanbt2.databinding.ActivityResultsScreenBinding
 
 class ResultsScreen : AppCompatActivity() {

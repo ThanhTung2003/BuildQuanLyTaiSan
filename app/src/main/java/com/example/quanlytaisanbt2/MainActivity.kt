@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.quanlytaisanbt2.UI.formatMoney
 import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
+import com.example.quanlytaisanbt2.layout.GridLayout
+import com.example.quanlytaisanbt2.layout.ResultsScreen
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -139,6 +141,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.assetResults.setOnClickListener {
             viewResult()
+            val intentMain: Intent = Intent(this@MainActivity, ResultsScreen::class.java)
+            startActivity(intentMain)
+            Log.d(BT2, "Chuyển sang màn hình kết quả")
+        }
+
+        binding.buttonGridLayout.setOnClickListener {
+            val intentMain: Intent = Intent(this@MainActivity, GridLayout::class.java)
+            startActivity(intentMain)
+            Log.d(BT2, "Chuyển sang GridLayout")
         }
 
     }
