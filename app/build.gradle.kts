@@ -7,6 +7,10 @@ android {
     namespace = "com.example.quanlytaisanbt2"
     compileSdk = 34
 
+    viewBinding{
+        enable = true
+    }
+
     defaultConfig {
         applicationId = "com.example.quanlytaisanbt2"
         minSdk = 24
@@ -17,6 +21,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
+
     }
 
     buildTypes {
