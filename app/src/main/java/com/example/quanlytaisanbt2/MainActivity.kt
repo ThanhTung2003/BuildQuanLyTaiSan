@@ -11,6 +11,7 @@ import com.example.quanlytaisanbt2.UI.formatMoney
 import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
 import com.example.quanlytaisanbt2.layout.GridLayout
 import com.example.quanlytaisanbt2.layout.ResultsScreen
+import com.example.quanlytaisanbt2.layout_kt.RecyclerViewLayout
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -150,6 +151,12 @@ class MainActivity : AppCompatActivity() {
             val intentMain: Intent = Intent(this@MainActivity, GridLayout::class.java)
             startActivity(intentMain)
             Log.d(BT2, "Chuyển sang GridLayout")
+        }
+
+        binding.buttonRecyclerView.setOnClickListener {
+            val intentMain: Intent = Intent(this@MainActivity, RecyclerViewLayout::class.java)
+            startActivity(intentMain)
+            Log.d(BT2, "Chuyển sang RecyclerViewLayout")
         }
 
     }
