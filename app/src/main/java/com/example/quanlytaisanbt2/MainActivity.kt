@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 addAssetToCurrentPerson(asset) // add tài sản vào người hiện tại
                 binding.editTextAsset.text.clear()
                 binding.editTextValueAsset.text.clear()
-                updateAssetsListView()
+//                updateAssetsListView()
                 Log.d(BT2, "Thêm $assetName thành công với giá: ${assetValue.formatMoney()}")
             } else {
                 Log.d(BT2, "Chưa điền tên hoặc giá tài sản")

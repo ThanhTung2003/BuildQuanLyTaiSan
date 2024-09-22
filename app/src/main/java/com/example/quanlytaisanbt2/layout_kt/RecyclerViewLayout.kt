@@ -46,7 +46,7 @@ class RecyclerViewLayout : AppCompatActivity() {
             "Camera")
 
         recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
         dataList = arrayListOf<DataClass>()
         getData()
