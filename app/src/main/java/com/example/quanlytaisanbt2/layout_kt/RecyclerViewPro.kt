@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.quanlytaisanbt2.R
 import com.example.quanlytaisanbt2.category.CategoryAdapter
 import com.example.quanlytaisanbt2.category.DataCategory
 import com.example.quanlytaisanbt2.databinding.ActivityRecyclerViewProBinding
@@ -18,6 +19,7 @@ class RecyclerViewPro : AppCompatActivity() {
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var searchHandler: SearchHandler
     private lateinit var recyclerView: RecyclerView
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,8 +79,16 @@ class RecyclerViewPro : AppCompatActivity() {
         binding.RecyclerViewPro.layoutManager = LinearLayoutManager(this)
         binding.RecyclerViewPro.adapter = categoryAdapter
 
-        //chức năng tìm kiếm
+        // Khởi tạo searchView và RecyclerView
+        searchView = findViewById(R.id.searchView)
+        recyclerView = findViewById(R.id.RecyclerViewPro) // Ánh xạ RecyclerView với findViewById
 
+
+
+        // Ánh xạ RecyclerView với Adapter mặc định (categoryAdapter)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = categoryAdapter
+        //chức năng tìm kiếm
         searchHandler = SearchHandler(searchView, categoryList, recyclerView, categoryAdapter)
         searchHandler.setupSearch() // Gọi hàm thiết lập tìm kiếm
     }
