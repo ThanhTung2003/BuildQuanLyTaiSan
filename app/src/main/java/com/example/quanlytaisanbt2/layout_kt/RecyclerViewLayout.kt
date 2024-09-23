@@ -14,8 +14,8 @@ class RecyclerViewLayout : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var dataList: ArrayList<DataClass>
-    lateinit var imageList:Array<Int>
-    lateinit var titleList:Array<String>
+    private lateinit var imageList:Array<Int>
+    private lateinit var titleList:Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class RecyclerViewLayout : AppCompatActivity() {
             "Camera")
 
         recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false)
         recyclerView.setHasFixedSize(true)
         dataList = arrayListOf<DataClass>()
         getData()
