@@ -9,6 +9,7 @@
     <TextView
         android:id="@+id/title_Category"
         android:text="Phim gần đây"
+        android:layout_marginStart="5dp"
         android:textStyle="bold"
         android:textSize="22sp"
         android:textColor="@color/white"

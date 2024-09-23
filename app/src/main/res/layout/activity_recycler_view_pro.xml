@@ -10,6 +10,20 @@
     tools:context=".layout_kt.RecyclerViewPro"
     android:background="@color/black">
 
+  <androidx.appcompat.widget.SearchView
+      android:id="@+id/searchView"
+      android:layout_margin="12dp"
+      android:background="@drawable/search_bkg"
+      android:layout_width="match_parent"
+      app:iconifiedByDefault="false"
+      app:searchHintIcon="@null"
+      app:queryHint="Search..."
+      app:searchIcon="@drawable/baseline_search_24"
+      android:focusable="false"
+      android:backgroundTint="@color/white"
+      app:closeIcon="@drawable/baseline_clear_24"
+      android:layout_height="wrap_content"/>
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/RecyclerViewPro"
       android:layout_width="match_parent"

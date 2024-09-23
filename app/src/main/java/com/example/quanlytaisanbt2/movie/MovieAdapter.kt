@@ -26,8 +26,8 @@ class MovieAdapter(private val dataMovieList: List<DataMovie>) : RecyclerView.Ad
 
         Glide.with(holder.itemView.context)
             .load(currentItemMovie.dataImageMovieUrl) // URL của ảnh
-            .placeholder(R.drawable.cahong) // Ảnh hiển thị tạm thời khi ảnh chính đang tải
-            .error(R.drawable.baseline_wifi_off_24) // Ảnh hiển thị khi load ảnh thất bại
+            .placeholder(R.drawable.cahong) // hiển thị ảnh tạm thời khi ảnh chính đang tải
+            .error(R.drawable.baseline_wifi_off_24) // hiển thị ảnh khi load ảnh thất bại
             .into(holder.movieImage) // ImageView cần load ảnh vào
 
 
