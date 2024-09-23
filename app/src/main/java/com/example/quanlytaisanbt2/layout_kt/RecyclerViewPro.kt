@@ -4,25 +4,26 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.quanlytaisanbt2.R
+import androidx.recyclerview.widget.RecyclerView
 import com.example.quanlytaisanbt2.category.CategoryAdapter
 import com.example.quanlytaisanbt2.category.DataCategory
 import com.example.quanlytaisanbt2.databinding.ActivityRecyclerViewProBinding
 import com.example.quanlytaisanbt2.movie.DataMovie
-import com.example.quanlytaisanbt2.search.SearchAdapter
-import java.util.Locale
+import com.example.quanlytaisanbt2.search.SearchHandler
 
 class RecyclerViewPro : AppCompatActivity() {
     private lateinit var binding: ActivityRecyclerViewProBinding
     private lateinit var searchView: SearchView
     private lateinit var searchList: ArrayList<DataMovie>
+    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var searchHandler: SearchHandler
+    private lateinit var recyclerView: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRecyclerViewProBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         val cartoonMovies = listOf(
             DataMovie("https://homepage.momocdn.net/blogscontents/momo-upload-api-200219103835-637177055151245839.jpg", "Zootopia"),
@@ -63,7 +64,6 @@ class RecyclerViewPro : AppCompatActivity() {
             DataMovie("https://filmfare.wwmindia.com/content/2021/aug/best-english-horror-movies-it-21629283608.jpg", "IT (2017)")
         )
 
-
         val categoryList = listOf(
             DataCategory("Action", actionMovies),
             DataCategory("Cartoon", cartoonMovies),
@@ -72,45 +72,15 @@ class RecyclerViewPro : AppCompatActivity() {
             DataCategory("Horror", horrorMovies)
         )
 
-
-
         // Cài đặt adapter cho RecyclerView dọc
         val categoryAdapter = CategoryAdapter(categoryList)
         binding.RecyclerViewPro.layoutManager = LinearLayoutManager(this)
         binding.RecyclerViewPro.adapter = categoryAdapter
 
         //chức năng tìm kiếm
-        searchView = findViewById(R.id.searchView)
-        searchList = arrayListOf()
-        searchView.clearFocus()
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.clearFocus()
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                searchList.clear()
-                val searchText = newText?.toLowerCase(Locale.getDefault()) ?: ""
-                if (searchText.isNotEmpty()) {
-                    categoryList.forEach { category ->
-                        category.listMovies.forEach { movie ->
-                            if (movie.dataTitleMovie.toLowerCase(Locale.getDefault()).contains(searchText)) {
-                                searchList.add(movie)
-                            }
-                        }
-                    }
-                    val searchAdapter = SearchAdapter(searchList)
-                    binding.RecyclerViewPro.layoutManager = LinearLayoutManager(this@RecyclerViewPro,LinearLayoutManager.HORIZONTAL,false)
-                    binding.RecyclerViewPro.adapter = searchAdapter
-                } else {
-                    binding.RecyclerViewPro.adapter = categoryAdapter
-                }
-                return true
-            }
-        })
+        searchHandler = SearchHandler(searchView, categoryList, recyclerView, categoryAdapter)
+        searchHandler.setupSearch() // Gọi hàm thiết lập tìm kiếm
     }
-
 
 }
