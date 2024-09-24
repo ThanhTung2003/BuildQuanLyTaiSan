@@ -9,19 +9,17 @@
         android:scaleType="fitXY"
         android:src="@drawable/baseline_circle_24"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="18dp"
-        android:layout_width="25dp"
-        android:layout_height="25dp"/>
+        android:layout_marginTop="20dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
 
     <TextView
         android:id="@+id/assetName"
         android:layout_marginStart="5dp"
-        android:text="xe ô tô"
+        android:text="Xe ô tô"
         android:textColor="@color/black"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:paddingStart="2dp"
-        android:layout_marginTop="20dp"
+        android:textSize="15sp"
+        android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -30,10 +28,8 @@
         android:layout_marginStart="5dp"
         android:text="300.000.000 vnđ"
         android:textColor="@color/black"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:paddingStart="2dp"
-        android:layout_marginTop="20dp"
+        android:textSize="15sp"
+        android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
