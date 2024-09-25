@@ -5,17 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quanlytaisanbt2.Controller.AssetsController
 import com.example.quanlytaisanbt2.Controller.PersonController
 import com.example.quanlytaisanbt2.Data.DataAsset
 import com.example.quanlytaisanbt2.Data.DataPerson
-import com.example.quanlytaisanbt2.UI.formatMoney
 import com.example.quanlytaisanbt2.adapter.AssetAdapter
 import com.example.quanlytaisanbt2.adapter.PersonAdapter
 import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
@@ -32,6 +31,9 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.sleep(1888)
+        installSplashScreen()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Log.d(BT2, "onCreate")
@@ -123,20 +125,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-//        val dialogView = layoutInflater.inflate(R.layout.dialog_custom_alert, null)
-//        val builder = AlertDialog.Builder(this)
-//        builder.setView(dialogView)
-//
-//         // Hiển thị hộp thoại
-//        val alertDialog = builder.create()
-//        alertDialog.show()
-//
-//        // Thiết lập hành vi nút "Đóng"
-//        val buttonClose = dialogView.findViewById<Button>(R.id.buttonClose)
-//        buttonClose.setOnClickListener {
-//            alertDialog.dismiss() // Đóng hộp thoại
-//        }
 
         binding.personResult.setOnClickListener {
             val intentMain = Intent(this@MainActivity, ResultsScreen::class.java)
