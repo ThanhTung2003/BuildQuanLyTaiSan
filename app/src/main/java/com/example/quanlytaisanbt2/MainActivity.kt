@@ -21,15 +21,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var personAdapter: PersonAdapter
     private lateinit var assetAdapter: AssetAdapter
     private val personList = mutableListOf<DataPerson>()
+    private val selectedAssets = mutableListOf<DataAsset>() // Danh sách tài sản đã chọn
+    private val assetList = mutableListOf<DataAsset>() // Danh sách tài sản ban đầu
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Log.d(BT2, "onCreate")
-
 
         binding.layoutPeople.visibility = View.VISIBLE
         binding.layoutAssets.visibility = View.GONE
@@ -41,30 +41,28 @@ class MainActivity : AppCompatActivity() {
                     binding.layoutPeople.visibility = View.VISIBLE
                     binding.layoutAssets.visibility = View.GONE
                     Log.d(BT2, PERSONVIEW)
-
                 }
                 R.id.radiobuttonAsset -> {
                     binding.layoutPeople.visibility = View.GONE
                     binding.layoutAssets.visibility = View.VISIBLE
                     Log.d(BT2, ASSETVIEW)
-
                 }
             }
         }
 
-        // Khởi tạo RecyclerView cho con người
         val peopleRecyclerView = findViewById<RecyclerView>(R.id.peopleRecyclerView)
         peopleRecyclerView.layoutManager = LinearLayoutManager(this)
         personAdapter = PersonAdapter(personList)
         peopleRecyclerView.adapter = personAdapter
 
-        // Khởi tạo RecyclerView cho tài sản với một danh sách rỗng
         val assetsRecyclerView = findViewById<RecyclerView>(R.id.assetsRecyclerView)
         assetsRecyclerView.layoutManager = LinearLayoutManager(this)
-        assetAdapter = AssetAdapter(mutableListOf()) // Khởi tạo adapter với danh sách rỗng
+        assetAdapter = AssetAdapter(assetList) { asset ->
+            onAssetSelected(asset) // Callback khi tài sản được chọn
+        }
         assetsRecyclerView.adapter = assetAdapter
 
-        // thêm tài sản
+        //thêm tài sản
         binding.buttonAddAsset.setOnClickListener {
             val assetName = binding.editTextAsset.text.toString()
             val assetValueText = binding.editTextValueAsset.text.toString()
@@ -72,8 +70,8 @@ class MainActivity : AppCompatActivity() {
             if (assetName.isNotEmpty() && assetValueText.isNotEmpty()) {
                 val assetValue = assetValueText.toLongOrNull()
                 if (assetValue != null) {
-                    // Thêm tài sản vào adapter
                     val newAsset = DataAsset(assetName, assetValue)
+
                     assetAdapter.addAsset(newAsset)
 
                     binding.editTextAsset.text.clear()
@@ -90,25 +88,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // thêm người
         binding.buttonAddPeople.setOnClickListener {
             val personName = binding.editTextPeople.text.toString()
 
-            if (personName.isNotEmpty()) {
-                // Thêm người mới vào danh sách
-                val newPerson = DataPerson(personName, emptyList()) // Tạm thời không thêm tài sản
-                personAdapter.addPerson(newPerson) // Thêm người qua personAdapter
+            if (personName.isNotEmpty() && selectedAssets.isNotEmpty()) {
 
-                // Reset trường nhập liệu
+                val newPerson = DataPerson(personName, selectedAssets.map { it.name })
+                personAdapter.addPerson(newPerson)
+
                 binding.editTextPeople.text.clear()
+                selectedAssets.clear()
+                binding.textViewListAssets.text = "" // Xóa TextView sau khi thêm người
 
-                Log.d("BT2", "Thêm người: $personName")
-                Toast.makeText(this, "Thêm $personName thành công", Toast.LENGTH_SHORT).show()
+                Log.d(BT2, "Thêm người: $personName với tài sản: ${newPerson.assets}")
             } else {
-                Toast.makeText(this, "Tên người không được để trống", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Tên người và tài sản không được để trống", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Điều hướng sang màn hình kết quả
+
         binding.personResult.setOnClickListener {
             val intentMain = Intent(this@MainActivity, ResultsScreen::class.java)
             startActivity(intentMain)
@@ -116,9 +115,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.assetResults.setOnClickListener {
-            val intentMain = Intent (this@MainActivity, ResultsScreen::class.java)
+            val intentMain = Intent(this@MainActivity, ResultsScreen::class.java)
             startActivity(intentMain)
             Log.d(BT2, "Chuyển sang màn hình kết quả")
+        }
+    }
+
+    private fun onAssetSelected(asset: DataAsset) {
+        if (!selectedAssets.contains(asset)) {
+            selectedAssets.add(asset)
+            binding.textViewListAssets.text = selectedAssets.joinToString { it.name } // Cập nhật TextView
         }
     }
 
@@ -128,5 +134,3 @@ class MainActivity : AppCompatActivity() {
         private const val ASSETVIEW = "View Tài sản"
     }
 }
-
-

@@ -9,7 +9,7 @@ import com.example.quanlytaisanbt2.Data.DataAsset
 import com.example.quanlytaisanbt2.R
 import com.example.quanlytaisanbt2.UI.formatMoney
 
-class AssetAdapter(private val assets: MutableList<DataAsset>) : RecyclerView.Adapter<AssetAdapter.AssetViewHolder>() {
+class AssetAdapter(private val assetList: MutableList<DataAsset>, private val onItemClick: (DataAsset) -> Unit) : RecyclerView.Adapter<AssetAdapter.AssetViewHolder>() {
 
     class AssetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val assetName: TextView = itemView.findViewById(R.id.assetName)
@@ -22,17 +22,22 @@ class AssetAdapter(private val assets: MutableList<DataAsset>) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: AssetViewHolder, position: Int) {
-        val asset = assets[position]
+        val asset = assetList[position]
         holder.assetName.text = asset.name
-        holder.assetValue.text = "${asset.value.formatMoney()}"
+        holder.assetValue.text = asset.value.formatMoney()
+
+        holder.itemView.setOnClickListener {
+            onItemClick(asset)
+        }
     }
 
     override fun getItemCount(): Int {
-        return assets.size
+        return assetList.size
     }
 
     fun addAsset(asset: DataAsset) {
-        assets.add(asset)
-        notifyItemInserted(assets.size - 1)
+        assetList.add(asset)
+        notifyItemInserted(assetList.size - 1) // Chỉ thông báo khi item mới được thêm
     }
 }
+
