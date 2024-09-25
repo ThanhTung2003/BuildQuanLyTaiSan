@@ -24,14 +24,18 @@
             android:id="@+id/radiobuttonPeople"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="12dp"
             android:checked="true"
+            android:textSize="18sp"
+            android:textColor="@color/black"
             android:text="@string/People" />
 
         <RadioButton
             android:id="@+id/radiobuttonAsset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
             android:text="@string/Asset" />
     </RadioGroup>
 
@@ -59,6 +63,7 @@
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:textSize="18sp"
             android:paddingStart="@dimen/text_sise_input_text" />
 
         <LinearLayout
@@ -73,6 +78,7 @@
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="15sp"
                 android:text="@string/TV_ListAssets"
                 android:textColor="@color/textAssets" />
 

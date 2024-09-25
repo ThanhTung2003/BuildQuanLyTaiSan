@@ -5,10 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.quanlytaisanbt2.Controller.AssetsController
+import com.example.quanlytaisanbt2.Controller.PersonController
 import com.example.quanlytaisanbt2.Data.DataAsset
 import com.example.quanlytaisanbt2.Data.DataPerson
 import com.example.quanlytaisanbt2.UI.formatMoney
@@ -23,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private val personList = mutableListOf<DataPerson>()
     private val selectedAssets = mutableListOf<DataAsset>()
     private val assetList = mutableListOf<DataAsset>()
+    private lateinit var assetsController: AssetsController
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +35,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Log.d(BT2, "onCreate")
+
+        personAdapter = PersonAdapter(personList)
+        val personController = PersonController(personAdapter)
+
+        assetAdapter = AssetAdapter(assetList) { asset -> onAssetSelected(asset) }
+
+        assetsController = AssetsController(assetAdapter)
+
 
         binding.layoutPeople.visibility = View.VISIBLE
         binding.layoutAssets.visibility = View.GONE
@@ -58,58 +71,72 @@ class MainActivity : AppCompatActivity() {
         val assetsRecyclerView = findViewById<RecyclerView>(R.id.assetsRecyclerView)
         assetsRecyclerView.layoutManager = LinearLayoutManager(this)
         assetAdapter = AssetAdapter(assetList) { asset ->
-            onAssetSelected(asset) // Callback khi tài sản được chọn
+            onAssetSelected(asset)
         }
         assetsRecyclerView.adapter = assetAdapter
 
-        //thêm tài sản
+        // Thêm tài sản
         binding.buttonAddAsset.setOnClickListener {
             val assetName = binding.editTextAsset.text.toString()
             val assetValueText = binding.editTextValueAsset.text.toString()
 
-            if (assetName.isNotEmpty() && assetValueText.isNotEmpty()) {
-                val assetValue = assetValueText.toLongOrNull()
-                if (assetValue != null) {
-                    val newAsset = DataAsset(assetName, assetValue)
+            if (assetsController.addAsset(assetName, assetValueText)) {
 
-                    assetAdapter.addAsset(newAsset)
+                assetAdapter.notifyDataSetChanged()
 
-                    binding.editTextAsset.text.clear()
-                    binding.editTextValueAsset.text.clear()
-
-                    Log.d(BT2, "Thêm tài sản: $assetName - ${assetValue.formatMoney()}")
-                    Toast.makeText(this, "Thêm $assetName thành công", Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.d(BT2, "Giá trị tài sản không hợp lệ")
-                }
+                binding.editTextAsset.text.clear()
+                binding.editTextValueAsset.text.clear()
+                Toast.makeText(this, "Thêm $assetName thành công", Toast.LENGTH_SHORT).show()
             } else {
-                Log.d(BT2, "Tên hoặc giá trị tài sản không được để trống")
                 Toast.makeText(this, "Thêm tài sản thất bại", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // thêm người
+        // Thêm người
         binding.buttonAddPeople.setOnClickListener {
             val personName = binding.editTextPeople.text.toString()
 
-            if (personName.isNotEmpty() && selectedAssets.isNotEmpty()) {
-                // Tạo đối tượng DataPerson với danh sách tài sản của họ
-                val newPerson = DataPerson(personName, selectedAssets.map { it.name })
-
-                // Thêm người vào danh sách và cập nhật RecyclerView
-                personAdapter.addPerson(newPerson)
-
-                // Xóa nội dung các trường nhập và danh sách tài sản đã chọn
-                binding.editTextPeople.text.clear()
-                selectedAssets.clear()
-                binding.textViewListAssets.text = "Tài sản: "
-
-                Log.d(BT2, "Thêm người: $personName với tài sản: ${newPerson.assets}")
-                Toast.makeText(this, "Thêm $personName thành công ", Toast.LENGTH_SHORT).show()
+            // Kiểm tra nếu chưa có tài sản
+            if (selectedAssets.isEmpty()) {
+                // Hiển thị cảnh báo
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Cảnh báo")
+                builder.setMessage("Bắt buộc phải thêm tài sản cho con người")
+                builder.setPositiveButton("Đóng") { dialog, _ ->
+                    dialog.dismiss() // Đóng hộp thoại khi người dùng bấm "Đóng"
+                }
+                val alertDialog = builder.create()
+                alertDialog.show()
             } else {
-                Toast.makeText(this, "Tên người và tài sản không được để trống", Toast.LENGTH_SHORT).show()
+                // Thêm người nếu đã có tài sản
+                if (personController.addPerson(personName, selectedAssets)) {
+                    personAdapter.notifyDataSetChanged()
+
+                    // Xóa các trường nhập và danh sách tài sản
+                    binding.editTextPeople.text.clear()
+                    selectedAssets.clear()
+                    binding.textViewListAssets.text = "Tài sản: "
+
+                    Toast.makeText(this, "Thêm người thành công", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Tên người không được để trống", Toast.LENGTH_SHORT).show()
+                }
             }
         }
+
+//        val dialogView = layoutInflater.inflate(R.layout.dialog_custom_alert, null)
+//        val builder = AlertDialog.Builder(this)
+//        builder.setView(dialogView)
+//
+//         // Hiển thị hộp thoại
+//        val alertDialog = builder.create()
+//        alertDialog.show()
+//
+//        // Thiết lập hành vi nút "Đóng"
+//        val buttonClose = dialogView.findViewById<Button>(R.id.buttonClose)
+//        buttonClose.setOnClickListener {
+//            alertDialog.dismiss() // Đóng hộp thoại
+//        }
 
         binding.personResult.setOnClickListener {
             val intentMain = Intent(this@MainActivity, ResultsScreen::class.java)
@@ -124,6 +151,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun onAssetSelected(asset: DataAsset) {
         if (!selectedAssets.contains(asset)) {
             selectedAssets.add(asset)
