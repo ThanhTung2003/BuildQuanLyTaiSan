@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/personName"
         android:layout_marginStart="5dp"
-        android:text="Phim hay"
+        android:text="Phim hay: "
         android:textColor="@color/black"
         android:textSize="15sp"
         android:layout_marginTop="15dp"
@@ -25,7 +25,6 @@
 
     <TextView
         android:id="@+id/personAssets"
-        android:layout_marginStart="5dp"
         android:text="xe máy"
         android:textColor="@color/black"
         android:textSize="15sp"

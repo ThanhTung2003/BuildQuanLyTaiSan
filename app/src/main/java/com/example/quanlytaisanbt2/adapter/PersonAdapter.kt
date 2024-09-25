@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quanlytaisanbt2.Data.DataPerson
 import com.example.quanlytaisanbt2.R
 
-class PersonAdapter(private val people: MutableList<DataPerson>) : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
+class PersonAdapter(private val personList: List<DataPerson>) : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val personName: TextView = itemView.findViewById(R.id.personName)
+        val personAssets: TextView = itemView.findViewById(R.id.personAssets)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
@@ -20,16 +21,21 @@ class PersonAdapter(private val people: MutableList<DataPerson>) : RecyclerView.
     }
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
-        val person = people[position]
+        val person = personList[position]
         holder.personName.text = person.name
+
+
+        holder.personAssets.text =": " + person.assets.joinToString(", ")
     }
 
     override fun getItemCount(): Int {
-        return people.size
+        return personList.size
     }
 
+    // Thêm người vào adapter
     fun addPerson(person: DataPerson) {
-        people.add(person)
-        notifyItemInserted(people.size - 1)
+        (personList as MutableList).add(person)
+        notifyItemInserted(personList.size - 1)
     }
 }
+

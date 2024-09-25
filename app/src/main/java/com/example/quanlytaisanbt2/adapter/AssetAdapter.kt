@@ -24,7 +24,7 @@ class AssetAdapter(private val assetList: MutableList<DataAsset>, private val on
     override fun onBindViewHolder(holder: AssetViewHolder, position: Int) {
         val asset = assetList[position]
         holder.assetName.text = asset.name
-        holder.assetValue.text = asset.value.formatMoney()
+        holder.assetValue.text ="- "+ asset.value.formatMoney()
 
         holder.itemView.setOnClickListener {
             onItemClick(asset)

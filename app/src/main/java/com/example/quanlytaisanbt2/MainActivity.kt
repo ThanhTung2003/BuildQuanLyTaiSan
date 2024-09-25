@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var personAdapter: PersonAdapter
     private lateinit var assetAdapter: AssetAdapter
     private val personList = mutableListOf<DataPerson>()
-    private val selectedAssets = mutableListOf<DataAsset>() // Danh sách tài sản đã chọn
-    private val assetList = mutableListOf<DataAsset>() // Danh sách tài sản ban đầu
+    private val selectedAssets = mutableListOf<DataAsset>()
+    private val assetList = mutableListOf<DataAsset>()
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,20 +93,23 @@ class MainActivity : AppCompatActivity() {
             val personName = binding.editTextPeople.text.toString()
 
             if (personName.isNotEmpty() && selectedAssets.isNotEmpty()) {
-
+                // Tạo đối tượng DataPerson với danh sách tài sản của họ
                 val newPerson = DataPerson(personName, selectedAssets.map { it.name })
+
+                // Thêm người vào danh sách và cập nhật RecyclerView
                 personAdapter.addPerson(newPerson)
 
+                // Xóa nội dung các trường nhập và danh sách tài sản đã chọn
                 binding.editTextPeople.text.clear()
                 selectedAssets.clear()
-                binding.textViewListAssets.text = "" // Xóa TextView sau khi thêm người
+                binding.textViewListAssets.text = "Tài sản: "
 
                 Log.d(BT2, "Thêm người: $personName với tài sản: ${newPerson.assets}")
+                Toast.makeText(this, "Thêm $personName thành công ", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Tên người và tài sản không được để trống", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         binding.personResult.setOnClickListener {
             val intentMain = Intent(this@MainActivity, ResultsScreen::class.java)
@@ -124,7 +127,7 @@ class MainActivity : AppCompatActivity() {
     private fun onAssetSelected(asset: DataAsset) {
         if (!selectedAssets.contains(asset)) {
             selectedAssets.add(asset)
-            binding.textViewListAssets.text = selectedAssets.joinToString { it.name } // Cập nhật TextView
+            binding.textViewListAssets.text = "Tài sản: " + selectedAssets.joinToString {it.name}
         }
     }
 
