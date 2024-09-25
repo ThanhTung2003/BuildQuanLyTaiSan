@@ -10,26 +10,25 @@
         android:src="@drawable/baseline_circle_24"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_width="10dp"
-        android:layout_height="10dp"/>
+        android:layout_width="8dp"
+        android:layout_height="8dp"/>
 
     <TextView
         android:id="@+id/personName"
         android:layout_marginStart="5dp"
-        android:text="Phim hay"
+        android:text="Phim hay: "
         android:textColor="@color/black"
-        android:textSize="15sp"
-        android:layout_marginTop="15dp"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/personAssets"
-        android:layout_marginStart="5dp"
         android:text="xe máy"
         android:textColor="@color/black"
-        android:textSize="15sp"
-        android:layout_marginTop="15dp"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
