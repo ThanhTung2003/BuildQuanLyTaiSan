@@ -18,6 +18,7 @@ import com.example.quanlytaisanbt2.Data.DataPerson
 import com.example.quanlytaisanbt2.adapter.AssetAdapter
 import com.example.quanlytaisanbt2.adapter.PersonAdapter
 import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
+import com.google.gson.Gson
 import kotlin.collections.sumOf
 
 class MainActivity : AppCompatActivity() {
@@ -129,21 +130,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.personResult.setOnClickListener {
             val intentMain = Intent(this@MainActivity, ResultsScreen::class.java)
-            //truyen du liệu
-            val totalPeople = personList.size
-//            val taxPayers = personList.filter { person ->
-//                person.assets.sumOf { asset -> asset.value } >= 1000000000
-//            }
-//            val nonTaxPayers = personList.filter { person ->
-//                person.assets.sumOf { asset -> asset.value } < 1000000000
-//            }
-
-            // Truyền dữ liệu
-            intentMain.putExtra("totalPeople", totalPeople)
-//            intentMain.putExtra("taxPayersCount", taxPayers.size)
-//            intentMain.putExtra("nonTaxPayersCount", nonTaxPayers.size)
-
+            intentMain.putExtra("totalPeople", personList.size)
+            intentMain.putExtra(ResultsScreen.ARG_DATA_LIST_PERSON, Gson().toJson(personList))
             startActivity(intentMain)
+
             Log.d("baitap2", "Chuyển sang màn hình kết quả")
         }
 

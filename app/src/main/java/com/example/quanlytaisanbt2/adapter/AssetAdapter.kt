@@ -37,7 +37,7 @@ class AssetAdapter(private val assetList: MutableList<DataAsset>, private val on
 
     fun addAsset(asset: DataAsset) {
         assetList.add(asset)
-        notifyItemInserted(assetList.size - 1) // Chỉ thông báo khi item mới được thêm
+        notifyItemInserted(assetList.size - 1)
     }
 }
 

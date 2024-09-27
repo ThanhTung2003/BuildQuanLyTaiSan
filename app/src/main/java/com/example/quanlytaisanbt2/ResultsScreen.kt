@@ -9,6 +9,10 @@ import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
 import com.example.quanlytaisanbt2.databinding.ActivityResultsScreenBinding
 
 class ResultsScreen : AppCompatActivity() {
+
+    companion object {
+        const val ARG_DATA_LIST_PERSON = "ARG_DATA_LIST_PERSON"
+    }
     private lateinit var binding: ActivityResultsScreenBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +24,8 @@ class ResultsScreen : AppCompatActivity() {
         val taxPayersCount = intent.getIntExtra("taxPayersCount", 0)
         val nonTaxPayersCount = intent.getIntExtra("nonTaxPayersCount", 0)
 
+        val data = intent.getStringExtra(ARG_DATA_LIST_PERSON)
+        Log.d("AAAAAAAAAAAAAAAAAAAAA","DaTa: $data")
         // Hiển thị dữ liệu lên TextView
         binding.textTotalPeople.text = "Tổng có $totalPeople người trong danh sách"
         binding.textTotalPeoplePayTax.text = "Có $taxPayersCount người đóng thuế"
