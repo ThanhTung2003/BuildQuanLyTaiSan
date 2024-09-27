@@ -15,6 +15,16 @@ class ResultsScreen : AppCompatActivity() {
         binding = ActivityResultsScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Nhận dữ liệu từ Intent
+        val totalPeople = intent.getIntExtra("totalPeople", 0)
+        val taxPayersCount = intent.getIntExtra("taxPayersCount", 0)
+        val nonTaxPayersCount = intent.getIntExtra("nonTaxPayersCount", 0)
+
+        // Hiển thị dữ liệu lên TextView
+        binding.textTotalPeople.text = "Tổng có $totalPeople người trong danh sách"
+        binding.textTotalPeoplePayTax.text = "Có $taxPayersCount người đóng thuế"
+        binding.textTotalPeopleNoPayTax.text = "Có $nonTaxPayersCount người không đóng thuế"
+
         binding.buttonBack.setOnClickListener {
             finish()
             Log.d("baitap2", "Trở về màn hình chính")
