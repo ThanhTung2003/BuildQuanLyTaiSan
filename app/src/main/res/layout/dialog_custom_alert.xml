@@ -8,36 +8,41 @@
     app:cardCornerRadius="15sp"
     android:padding="20dp">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cảnh báo"
-        android:layout_gravity="center_horizontal"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="@android:color/black" />
+   <androidx.appcompat.widget.LinearLayoutCompat
+       android:orientation="vertical"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content">
+       <TextView
+           android:id="@+id/titleText"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Cảnh báo"
+           android:layout_gravity="center_horizontal"
+           android:textStyle="bold"
+           android:textSize="20sp"
+           android:textColor="@android:color/black" />
 
-    <TextView
-        android:id="@+id/messageText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bắt buộc phải thêm tài sản cho con người"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:paddingTop="10dp"
-        android:textSize="16sp"
-        android:textColor="@android:color/black" />
+       <TextView
+           android:id="@+id/messageText"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Bắt buộc phải thêm tài sản cho con người"
+           android:layout_gravity="center_horizontal"
+           android:layout_marginTop="20dp"
+           android:paddingTop="10dp"
+           android:textSize="16sp"
+           android:textColor="@android:color/black" />
 
-    <Button
-        android:id="@+id/buttonClose"
-        android:background="@drawable/button_background"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Đóng"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp" />
+       <Button
+           android:id="@+id/buttonClose"
+           android:background="@drawable/button_background"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Đóng"
+           android:textAllCaps="false"
+           android:textColor="@color/white"
+           android:layout_gravity="center"
+           android:layout_marginTop="20dp" />
 
+   </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.cardview.widget.CardView>
