@@ -27,11 +27,11 @@ class ResultsScreen : AppCompatActivity() {
         val taxPayers: List<Person> = Gson().fromJson(jsonTaxPayers, type)
         val nonTaxPayers: List<Person> = Gson().fromJson(jsonNonTaxPayers, type)
 
-        // Setup RecyclerView for taxpayers
-        setupRecyclerView(binding.listPeoplePayTax, taxPayers, true)
-
-        // Setup RecyclerView for non-taxpayers
-        setupRecyclerView(binding.listPeopleNoPayTax, nonTaxPayers, true)
+//        // Setup RecyclerView for taxpayers
+//        setupRecyclerView(binding.listPeoplePayTax, taxPayers, true)
+//
+//        // Setup RecyclerView for non-taxpayers
+//        setupRecyclerView(binding.listPeopleNoPayTax, nonTaxPayers, true)
 
         binding.textTotalPeople.text = "Tổng có ${taxPayers.size + nonTaxPayers.size} người trong danh sách"
         binding.textTotalPeoplePayTax.text = "Có ${taxPayers.size} người đóng thuế"
@@ -44,9 +44,9 @@ class ResultsScreen : AppCompatActivity() {
         }
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView, people: List<Person>, showTotalValue: Boolean) {
-        val adapter = PersonAdapter(people.toMutableList(), showTotalValue)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-    }
+//    private fun setupRecyclerView(recyclerView: RecyclerView, people: List<Person>, showTotalValue: Boolean) {
+//        val adapter = PersonAdapter(people.toMutableList(), showTotalValue)
+//        recyclerView.layoutManager = LinearLayoutManager(this)
+//        recyclerView.adapter = adapter
+//    }
 }

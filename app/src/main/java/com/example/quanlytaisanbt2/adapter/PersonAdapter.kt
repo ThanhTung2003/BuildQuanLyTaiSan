@@ -3,48 +3,35 @@ package com.example.quanlytaisanbt2.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.quanlytaisanbt2.Person
 import com.example.quanlytaisanbt2.R
 import com.example.quanlytaisanbt2.UI.formatMoney
 
-class PersonAdapter(private val personList: MutableList<Person>, private val showTotalValue: Boolean) : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
+class PersonAdapter(private val persons: List<Person>) : RecyclerView.Adapter<PersonAdapter.ViewHolder>() {
 
-    class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val personName: TextView = itemView.findViewById(R.id.personName)
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val imageAvatar: ImageView = view.findViewById(R.id.imageAvatar)
+        val textPersonName: TextView = view.findViewById(R.id.personName)
         val personAssets: TextView = itemView.findViewById(R.id.personAssets)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.person_item, parent, false)
-        return PersonViewHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.person_item, parent, false)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
-        val person = personList[position]
-        holder.personName.text = person.personName
-
-        if (showTotalValue) {
-            // Hiển thị tổng giá trị tài sản
-            val totalValue = person.getTotalAssetValue().formatMoney()
-            holder.personAssets.text = " - $totalValue"
-        } else {
-            // Hiển thị danh sách tài sản
-            val assetsDescription = person.assets.joinToString(", ") { asset -> ": ${asset.getName()}"}
-            holder.personAssets.text = assetsDescription
-        }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val person = persons[position]
+        holder.textPersonName.text = person.name
+        Glide.with(holder.itemView.context).load(person.avatar).into(holder.imageAvatar)
+//        holder.personAssets.text = ": $assetNames"
     }
 
-    override fun getItemCount(): Int {
-        return personList.size
-    }
-
-    fun addPerson(person: Person) {
-        personList.add(person)
-        notifyItemInserted(personList.size - 1)
-    }
-
-
+    override fun getItemCount(): Int = persons.size
 }
+
 

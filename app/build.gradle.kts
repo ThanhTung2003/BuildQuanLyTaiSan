@@ -46,9 +46,14 @@ android {
 
 dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
-    compile ("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation ("com.github.bumptech.glide:glide:3.7.0")
+    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation ("androidx.core:core:1.13.1")
+
+
 
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.androidx.core.ktx)

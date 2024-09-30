@@ -1,179 +1,106 @@
 package com.example.quanlytaisanbt2
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.quanlytaisanbt2.Controller.AssetsController
-import com.example.quanlytaisanbt2.Controller.PersonController
 import com.example.quanlytaisanbt2.adapter.AssetAdapter
 import com.example.quanlytaisanbt2.adapter.PersonAdapter
 import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
-import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var personAdapter: PersonAdapter
     private lateinit var assetAdapter: AssetAdapter
-    private val personList = mutableListOf<Person>()
-    private val selectedAssets = mutableListOf<Asset>()
-    private val assetList = mutableListOf<Asset>()
-    private lateinit var assetsController: AssetsController
+    private lateinit var personAdapter: PersonAdapter
 
-    @SuppressLint("MissingInflatedId", "SetTextI18n", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Thread.sleep(1888)
         installSplashScreen()
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.d(BT2, "onCreate")
 
-        personAdapter = PersonAdapter(personList, true) // Đặt true để hiển thị tổng giá trị tài sản
-
-        val personController = PersonController(personAdapter)
-
-        assetAdapter = AssetAdapter(assetList) { asset -> onAssetSelected(asset) }
-
-        assetsController = AssetsController(assetAdapter)
-
-
+        // Set default view
         binding.layoutPeople.visibility = View.VISIBLE
         binding.layoutAssets.visibility = View.GONE
-        Log.d(BT2, "View mặc định")
 
-        binding.radioGroupPeopleAndAsset.setOnCheckedChangeListener { _, checkid ->
-            when (checkid) {
+        setupRecyclerViews()
+        fetchAssets()
+        fetchPersons()
+
+        // Set listener for switching views
+        binding.radioGroupPeopleAndAsset.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
                 R.id.radiobuttonPeople -> {
                     binding.layoutPeople.visibility = View.VISIBLE
                     binding.layoutAssets.visibility = View.GONE
-                    Log.d(BT2, PERSONVIEW)
                 }
                 R.id.radiobuttonAsset -> {
                     binding.layoutPeople.visibility = View.GONE
                     binding.layoutAssets.visibility = View.VISIBLE
-                    Log.d(BT2, ASSETVIEW)
                 }
             }
         }
+    }
 
-        val peopleRecyclerView = findViewById<RecyclerView>(R.id.peopleRecyclerView)
-        peopleRecyclerView.layoutManager = LinearLayoutManager(this)
-        personAdapter = PersonAdapter(personList, false)
-        peopleRecyclerView.adapter = personAdapter
+    private fun setupRecyclerViews() {
+        // Setup LayoutManagers for RecyclerViews
+        binding.assetsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.peopleRecyclerView.layoutManager = LinearLayoutManager(this)
+    }
 
-        val assetsRecyclerView = findViewById<RecyclerView>(R.id.assetsRecyclerView)
-        assetsRecyclerView.layoutManager = LinearLayoutManager(this)
-        assetAdapter = AssetAdapter(assetList) { asset ->
-            onAssetSelected(asset)
-        }
-        assetsRecyclerView.adapter = assetAdapter
+    private fun fetchAssets() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://testapi.io/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-        // Thêm tài sản
-        binding.buttonAddAsset.setOnClickListener {
-            val assetName = binding.editTextAsset.text.toString().trim()
-            val assetValueText = binding.editTextValueAsset.text.toString().trim()
-
-            if (assetName.isNotEmpty() && assetValueText.isNotEmpty()) {
-                if (assetsController.addAsset(assetName, assetValueText)) {
-                    assetAdapter.notifyDataSetChanged()
-                    binding.editTextAsset.text.clear()
-                    binding.editTextValueAsset.text.clear()
-                    Toast.makeText(this, "Thêm $assetName thành công", Toast.LENGTH_SHORT).show()
+        val apiService = retrofit.create(ApiService::class.java)
+        apiService.getAssets().enqueue(object : Callback<AssetResponse> {
+            override fun onResponse(call: Call<AssetResponse>, response: Response<AssetResponse>) {
+                if (response.isSuccessful) {
+                    assetAdapter = AssetAdapter(response.body()?.data ?: emptyList())
+                    binding.assetsRecyclerView.adapter = assetAdapter
                 } else {
-                    Toast.makeText(this, "Thêm tài sản thất bại", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Failed to load assets", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin tài sản", Toast.LENGTH_SHORT).show()
             }
-        }
 
-        // Thêm người
-        binding.buttonAddPeople.setOnClickListener {
-            val personName = binding.editTextPeople.text.toString().trim()
+            override fun onFailure(call: Call<AssetResponse>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
-            if (personName.isNotEmpty()) {
-                if (selectedAssets.isEmpty()) {
-                    // Hiển thị AlertDialog tùy chỉnh
-                    val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_alert, null)
-                    val alertDialog = AlertDialog.Builder(this)
-                        .setView(dialogView)
-                        .create()
+    private fun fetchPersons() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://testapi.io/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-                    val buttonClose: Button = dialogView.findViewById(R.id.buttonClose)
-                    buttonClose.setOnClickListener {
-                        alertDialog.dismiss()
-                    }
-                    //handle dialog mau trong suot
-                    alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-                    alertDialog.show()
+        val apiService = retrofit.create(ApiService::class.java)
+        apiService.getPersons().enqueue(object : Callback<PersonResponse> {
+            override fun onResponse(call: Call<PersonResponse>, response: Response<PersonResponse>) {
+                if (response.isSuccessful) {
+                    personAdapter = PersonAdapter(response.body()?.data ?: emptyList())
+                    binding.peopleRecyclerView.adapter = personAdapter
                 } else {
-                    if (personController.addPerson(personName, selectedAssets)) {
-                        personAdapter.notifyDataSetChanged()
-                        binding.editTextPeople.text.clear()
-                        selectedAssets.clear()
-                        binding.textViewListAssets.text = "Tài sản: "
-                        Toast.makeText(this, "Thêm người thành công", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(this@MainActivity, "Failed to load persons", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                Toast.makeText(this, "Tên người không được để trống", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        //xem ket qua
-        binding.personResult.setOnClickListener {
-            val taxPayers = personList.filter { person ->
-                person.assets.sumOf { asset -> asset.value * asset.quantity } >= 1000000000
-            }
-            val nonTaxPayers = personList.filter { person ->
-                person.assets.sumOf { asset -> asset.value * asset.quantity } < 1000000000
             }
 
-            val intentMain = Intent(this@MainActivity, ResultsScreen::class.java)
-            intentMain.putExtra("totalPeople", personList.size)
-            intentMain.putExtra("taxPayers", Gson().toJson(taxPayers))
-            intentMain.putExtra("nonTaxPayers", Gson().toJson(nonTaxPayers))
-            startActivity(intentMain)
-        }
-
-        binding.assetResults.setOnClickListener {
-            val taxPayers = personList.filter { person ->
-                person.assets.sumOf { asset -> asset.value * asset.quantity } >= 1000000000
+            override fun onFailure(call: Call<PersonResponse>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
-            val nonTaxPayers = personList.filter { person ->
-                person.assets.sumOf { asset -> asset.value * asset.quantity } < 1000000000
-            }
-
-            val intentMain = Intent(this@MainActivity, ResultsScreen::class.java)
-            intentMain.putExtra("totalPeople", personList.size)
-            intentMain.putExtra("taxPayers", Gson().toJson(taxPayers))
-            intentMain.putExtra("nonTaxPayers", Gson().toJson(nonTaxPayers))
-            startActivity(intentMain)
-        }
+        })
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun onAssetSelected(asset: Asset) {
-        if (!selectedAssets.contains(asset)) {
-            selectedAssets.add(asset)
-            binding.textViewListAssets.text = "Tài sản: " + selectedAssets.joinToString {it.name}
-        }
-    }
 
-    companion object {
-        private const val BT2 = "baitap2"
-        private const val PERSONVIEW = "View Con người"
-        private const val ASSETVIEW = "View Tài sản"
-    }
+
 }
