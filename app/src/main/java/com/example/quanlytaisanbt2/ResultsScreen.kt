@@ -1,12 +1,14 @@
 package com.example.quanlytaisanbt2
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.example.quanlytaisanbt2.databinding.ActivityMainBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.quanlytaisanbt2.adapter.PersonAdapter
 import com.example.quanlytaisanbt2.databinding.ActivityResultsScreenBinding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class ResultsScreen : AppCompatActivity() {
 
@@ -19,21 +21,26 @@ class ResultsScreen : AppCompatActivity() {
         binding = ActivityResultsScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Nhận dữ liệu từ Intent
-        val totalPeople = intent.getIntExtra("totalPeople", 0)
-        val taxPayersCount = intent.getIntExtra("taxPayersCount", 0)
-        val nonTaxPayersCount = intent.getIntExtra("nonTaxPayersCount", 0)
+        val type = object : TypeToken<List<Person>>() {}.type
+        val taxPayers: List<Person> = Gson().fromJson(intent.getStringExtra("taxPayers"), type)
+        val nonTaxPayers: List<Person> = Gson().fromJson(intent.getStringExtra("nonTaxPayers"), type)
 
-        val data = intent.getStringExtra(ARG_DATA_LIST_PERSON)
-        Log.d("AAAAAAAAAAAAAAAAAAAAA","DaTa: $data")
-        // Hiển thị dữ liệu lên TextView
-        binding.textTotalPeople.text = "Tổng có $totalPeople người trong danh sách"
-        binding.textTotalPeoplePayTax.text = "Có $taxPayersCount người đóng thuế"
-        binding.textTotalPeopleNoPayTax.text = "Có $nonTaxPayersCount người không đóng thuế"
+        setupRecyclerView(binding.listPeoplePayTax, taxPayers)
+        setupRecyclerView(binding.listPeopleNoPayTax, nonTaxPayers)
 
-        binding.buttonBack.setOnClickListener {
-            finish()
-            Log.d("baitap2", "Trở về màn hình chính")
-        }
+        binding.textTotalPeople.text = "Tổng có ${taxPayers.size + nonTaxPayers.size} người trong danh sách"
+        binding.textTotalPeoplePayTax.text = "Có ${taxPayers.size} người đóng thuế"
+        binding.textTotalPeopleNoPayTax.text = "Có ${nonTaxPayers.size} người không đóng thuế"
+
+        setupRecyclerView(binding.listPeoplePayTax, taxPayers)
+        setupRecyclerView(binding.listPeopleNoPayTax, nonTaxPayers)
+
     }
+
+    private fun setupRecyclerView(recyclerView: RecyclerView, people: List<Person>) {
+        val adapter = PersonAdapter(people.toMutableList())
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+    }
+
 }

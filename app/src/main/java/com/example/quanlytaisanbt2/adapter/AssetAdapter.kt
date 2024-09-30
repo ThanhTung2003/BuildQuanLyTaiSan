@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quanlytaisanbt2.Data.DataAsset
+import com.example.quanlytaisanbt2.Asset
 import com.example.quanlytaisanbt2.R
 import com.example.quanlytaisanbt2.UI.formatMoney
 
-class AssetAdapter(private val assetList: MutableList<DataAsset>, private val onItemClick: (DataAsset) -> Unit) : RecyclerView.Adapter<AssetAdapter.AssetViewHolder>() {
+class AssetAdapter(private val assetList: MutableList<Asset>, private val onItemClick: (Asset) -> Unit) : RecyclerView.Adapter<AssetAdapter.AssetViewHolder>() {
 
     class AssetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val assetName: TextView = itemView.findViewById(R.id.assetName)
@@ -35,7 +35,7 @@ class AssetAdapter(private val assetList: MutableList<DataAsset>, private val on
         return assetList.size
     }
 
-    fun addAsset(asset: DataAsset) {
+    fun addAsset(asset: Asset) {
         assetList.add(asset)
         notifyItemInserted(assetList.size - 1)
     }
