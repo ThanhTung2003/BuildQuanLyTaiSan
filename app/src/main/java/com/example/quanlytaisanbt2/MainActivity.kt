@@ -114,6 +114,8 @@ class MainActivity : AppCompatActivity() {
                     buttonClose.setOnClickListener {
                         alertDialog.dismiss()
                     }
+                    //handle dialog mau trong suot
+                    alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                     alertDialog.show()
                 } else {
                     if (personController.addPerson(personName, selectedAssets)) {
