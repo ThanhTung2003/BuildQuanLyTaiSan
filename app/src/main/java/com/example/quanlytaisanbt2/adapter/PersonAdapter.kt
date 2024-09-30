@@ -7,11 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.quanlytaisanbt2.Asset
 import com.example.quanlytaisanbt2.Person
 import com.example.quanlytaisanbt2.R
 import com.example.quanlytaisanbt2.UI.formatMoney
 
-class PersonAdapter(private val persons: List<Person>) : RecyclerView.Adapter<PersonAdapter.ViewHolder>() {
+class PersonAdapter(private val persons: List<Person>, private val assets: List<Asset>) : RecyclerView.Adapter<PersonAdapter.ViewHolder>() {
+
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageAvatar: ImageView = view.findViewById(R.id.imageAvatar)
@@ -28,8 +30,19 @@ class PersonAdapter(private val persons: List<Person>) : RecyclerView.Adapter<Pe
         val person = persons[position]
         holder.textPersonName.text = person.name
         Glide.with(holder.itemView.context).load(person.avatar).into(holder.imageAvatar)
-//        holder.personAssets.text = ": $assetNames"
+
+        // Tạo danh sách tài sản với số lượng hiển thị lặp lại
+        val assetsDisplay = person.asset.flatMap { assetCount ->
+            // Tìm tên tài sản dựa trên id của tài sản
+            val assetName = assets.find { it.id == assetCount.id }?.name
+            // Tạo danh sách tên tài sản lặp lại theo số lượng
+            List(assetCount.count) { assetName ?: "Unknown Asset" }
+        }.joinToString(", ")
+
+        holder.personAssets.text = ": $assetsDisplay"
     }
+
+
 
     override fun getItemCount(): Int = persons.size
 }

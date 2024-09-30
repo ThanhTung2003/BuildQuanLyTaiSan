@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var assetAdapter: AssetAdapter
     private lateinit var personAdapter: PersonAdapter
+    private lateinit var assets: List<Asset> // Thêm biến để lưu danh sách tài sản
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +66,8 @@ class MainActivity : AppCompatActivity() {
         apiService.getAssets().enqueue(object : Callback<AssetResponse> {
             override fun onResponse(call: Call<AssetResponse>, response: Response<AssetResponse>) {
                 if (response.isSuccessful) {
-                    assetAdapter = AssetAdapter(response.body()?.data ?: emptyList())
+                    assets = response.body()?.data ?: emptyList() // Lưu danh sách tài sản vào biến
+                    assetAdapter = AssetAdapter(assets)
                     binding.assetsRecyclerView.adapter = assetAdapter
                 } else {
                     Toast.makeText(this@MainActivity, "Failed to load assets", Toast.LENGTH_SHORT).show()
@@ -88,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         apiService.getPersons().enqueue(object : Callback<PersonResponse> {
             override fun onResponse(call: Call<PersonResponse>, response: Response<PersonResponse>) {
                 if (response.isSuccessful) {
-                    personAdapter = PersonAdapter(response.body()?.data ?: emptyList())
+                    personAdapter = PersonAdapter(response.body()?.data ?: emptyList(), assets) // Truyền danh sách tài sản
                     binding.peopleRecyclerView.adapter = personAdapter
                 } else {
                     Toast.makeText(this@MainActivity, "Failed to load persons", Toast.LENGTH_SHORT).show()
@@ -100,7 +102,4 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
-
-
 }
