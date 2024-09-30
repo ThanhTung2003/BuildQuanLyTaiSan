@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quanlytaisanbt2.Person
 import com.example.quanlytaisanbt2.R
+import com.example.quanlytaisanbt2.UI.formatMoney
 
-class PersonAdapter(private val personList: MutableList<Person>) : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
+class PersonAdapter(private val personList: MutableList<Person>, private val showTotalValue: Boolean) : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val personName: TextView = itemView.findViewById(R.id.personName)
@@ -23,8 +24,15 @@ class PersonAdapter(private val personList: MutableList<Person>) : RecyclerView.
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = personList[position]
         holder.personName.text = person.personName
-        holder.personAssets.text = person.assets.joinToString(", ") { asset -> ": ${asset.getName()} "
 
+        if (showTotalValue) {
+            // Hiển thị tổng giá trị tài sản
+            val totalValue = person.getTotalAssetValue().formatMoney()
+            holder.personAssets.text = " - $totalValue"
+        } else {
+            // Hiển thị danh sách tài sản
+            val assetsDescription = person.assets.joinToString(", ") { asset -> ": ${asset.getName()}"}
+            holder.personAssets.text = assetsDescription
         }
     }
 

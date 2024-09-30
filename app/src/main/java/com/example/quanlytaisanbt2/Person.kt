@@ -10,7 +10,7 @@ data class Person(
 
     val assets = mutableListOf<Asset>()
 
-
+    fun getTotalAssetValue(): Long = assets.sumOf { it.value * it.quantity }
 
     fun getInfoTax(isFee: Boolean = true): String {
         var result = "  + ${personName}: ${getTotalValue().formatMoney()}"

@@ -37,7 +37,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d(BT2, "onCreate")
 
-        personAdapter = PersonAdapter(personList)
+        personAdapter = PersonAdapter(personList, true) // Đặt true để hiển thị tổng giá trị tài sản
+
         val personController = PersonController(personAdapter)
 
         assetAdapter = AssetAdapter(assetList) { asset -> onAssetSelected(asset) }
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
         val peopleRecyclerView = findViewById<RecyclerView>(R.id.peopleRecyclerView)
         peopleRecyclerView.layoutManager = LinearLayoutManager(this)
-        personAdapter = PersonAdapter(personList)
+        personAdapter = PersonAdapter(personList, false)
         peopleRecyclerView.adapter = personAdapter
 
         val assetsRecyclerView = findViewById<RecyclerView>(R.id.assetsRecyclerView)
