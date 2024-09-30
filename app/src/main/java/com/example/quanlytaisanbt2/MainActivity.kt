@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -37,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d(BT2, "onCreate")
 
-        personAdapter = PersonAdapter(personList)
+        personAdapter = PersonAdapter(personList, true) // Đặt true để hiển thị tổng giá trị tài sản
+
         val personController = PersonController(personAdapter)
 
         assetAdapter = AssetAdapter(assetList) { asset -> onAssetSelected(asset) }
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         val peopleRecyclerView = findViewById<RecyclerView>(R.id.peopleRecyclerView)
         peopleRecyclerView.layoutManager = LinearLayoutManager(this)
-        personAdapter = PersonAdapter(personList)
+        personAdapter = PersonAdapter(personList, false)
         peopleRecyclerView.adapter = personAdapter
 
         val assetsRecyclerView = findViewById<RecyclerView>(R.id.assetsRecyclerView)
@@ -100,7 +103,19 @@ class MainActivity : AppCompatActivity() {
             val personName = binding.editTextPeople.text.toString().trim()
 
             if (personName.isNotEmpty()) {
-                if (selectedAssets.isNotEmpty()) {
+                if (selectedAssets.isEmpty()) {
+                    // Hiển thị AlertDialog tùy chỉnh
+                    val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_alert, null)
+                    val alertDialog = AlertDialog.Builder(this)
+                        .setView(dialogView)
+                        .create()
+
+                    val buttonClose: Button = dialogView.findViewById(R.id.buttonClose)
+                    buttonClose.setOnClickListener {
+                        alertDialog.dismiss()
+                    }
+                    alertDialog.show()
+                } else {
                     if (personController.addPerson(personName, selectedAssets)) {
                         personAdapter.notifyDataSetChanged()
                         binding.editTextPeople.text.clear()
@@ -108,15 +123,6 @@ class MainActivity : AppCompatActivity() {
                         binding.textViewListAssets.text = "Tài sản: "
                         Toast.makeText(this, "Thêm người thành công", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    val builder = AlertDialog.Builder(this)
-                    builder.setTitle("Cảnh báo")
-                    builder.setMessage("Bắt buộc phải thêm tài sản cho con người")
-                    builder.setPositiveButton("Đóng") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    val alertDialog = builder.create()
-                    alertDialog.show()
                 }
             } else {
                 Toast.makeText(this, "Tên người không được để trống", Toast.LENGTH_SHORT).show()
