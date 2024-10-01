@@ -27,7 +27,12 @@ class AssetAdapter(private val assets: List<Asset>) : RecyclerView.Adapter<Asset
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val asset = assets[position]
         holder.textAssetName.text = asset.name
-        Glide.with(holder.itemView.context).load(asset.icon).into(holder.imageAsset)
+        Glide.with(holder.itemView.context)
+            .load(asset.icon)
+            .placeholder(R.drawable.icon_loading)
+            .error(R.drawable.icon_error)
+            .into(holder.imageAsset)
+
         holder.assetValue.text = "- " + asset.value.formatMoney()
     }
 

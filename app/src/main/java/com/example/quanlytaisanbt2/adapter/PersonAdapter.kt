@@ -26,7 +26,13 @@ class PersonAdapter(private val persons: List<Person>, private val assets: List<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val person = persons[position]
-        Glide.with(holder.itemView.context).load(person.avatar).into(holder.imageAvatar)
+        Glide.with(holder.itemView.context)
+            .load(person.avatar)
+            .placeholder(R.drawable.icon_loading)
+            .error(R.drawable.icon_error)
+            .into(holder.imageAvatar)
+
+
 
         if(showTotalValue) {
             val totalValue = person.totalAssetValue(assets).formatMoney()
