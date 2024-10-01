@@ -29,21 +29,32 @@
             android:layout_marginTop="10dp"
             android:text="Tổng có 5 người trong danh sách"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="22dp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <ImageView
+        android:id="@+id/dauCham1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layouttotalPeople"
+        app:layout_constraintRight_toLeftOf="@+id/textTotalPeoplePayTax"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/baseline_circle_24"
+        android:layout_marginTop="30dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
 
     <TextView
         android:id="@+id/textTotalPeoplePayTax"
         app:layout_constraintTop_toBottomOf="@+id/layouttotalPeople"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/dauCham1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15sp"
-        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="8dp"
         android:text="Có 3 người đóng thuế"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="22dp"
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -55,17 +66,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <ImageView
+        android:id="@+id/dauCham2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listPeoplePayTax"
+        app:layout_constraintRight_toLeftOf="@+id/textTotalPeopleNoPayTax"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/baseline_circle_24"
+        android:layout_marginTop="30dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
+
     <TextView
         android:id="@+id/textTotalPeopleNoPayTax"
         app:layout_constraintTop_toBottomOf="@+id/listPeoplePayTax"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/dauCham2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15sp"
-        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="8dp"
         android:text="Có 2 người không đóng thuế"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView

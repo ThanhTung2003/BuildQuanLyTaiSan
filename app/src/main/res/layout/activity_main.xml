@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical"
     android:paddingTop="20dp">
 
     <RadioGroup
@@ -26,17 +30,19 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:checked="true"
-            android:textSize="18sp"
+            android:text="@string/People"
             android:textColor="@color/black"
-            android:text="@string/People" />
+            android:textSize="18sp"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <RadioButton
             android:id="@+id/radiobuttonAsset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:text="@string/Asset"
             android:textColor="@color/black"
-            android:text="@string/Asset" />
+            android:textSize="18sp"
+            tools:ignore="TouchTargetSizeCheck" />
     </RadioGroup>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -215,6 +221,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/peopleRecyclerView"
+            android:scrollbars="vertical"
             android:layout_marginStart="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -244,6 +251,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/assetsRecyclerView"
+            android:scrollbars="vertical"
+            android:layout_marginBottom="30dp"
             android:layout_marginStart="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -252,3 +261,4 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
