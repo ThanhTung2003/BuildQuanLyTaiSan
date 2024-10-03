@@ -21,7 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var assetAdapter: AssetAdapter
     private lateinit var personAdapter: PersonAdapter
-    private lateinit var assets: List<Asset> // Thêm biến để lưu danh sách tài sản
+    private var assets: List<Asset> = emptyList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,42 +51,15 @@ class MainActivity : AppCompatActivity() {
         }
         //xem ket qua
         binding.personResult.setOnClickListener {
-            val taxThreshold = 1_000_000_000
-            val taxPayers = persons.filter { it.totalAssetValue(assets) >= taxThreshold }
-            val nonTaxPayers = persons.filter { it.totalAssetValue(assets) < taxThreshold }
-
-            val intent = Intent(this@MainActivity, ResultsScreen::class.java).apply {
-                putExtra("totalPeople", persons.size)
-                putExtra("taxPayers", Gson().toJson(taxPayers))
-                putExtra("nonTaxPayers", Gson().toJson(nonTaxPayers))
-                putExtra("assets", Gson().toJson(assets))
-            }
-            startActivity(intent)
+            navigateToResultsScreen()
         }
 
         binding.assetResults.setOnClickListener {
-            val taxThreshold = 1_000_000_000
-            val taxPayers = persons.filter { it.totalAssetValue(assets) >= taxThreshold }
-            val nonTaxPayers = persons.filter { it.totalAssetValue(assets) < taxThreshold }
-
-            val intent = Intent(this@MainActivity, ResultsScreen::class.java).apply {
-                putExtra("totalPeople", persons.size)
-                putExtra("taxPayers", Gson().toJson(taxPayers))
-                putExtra("nonTaxPayers", Gson().toJson(nonTaxPayers))
-                putExtra("assets", Gson().toJson(assets))
-            }
-            startActivity(intent)
+            navigateToResultsScreen()
         }
     }
+
     private var persons: List<Person> = listOf()
-
-    fun showResults() {
-        val taxThreshold = 1_000_000_000  // Ngưỡng để nộp thuế
-        val taxPayers = persons.filter { it.totalAssetValue(assets) >= taxThreshold }
-        val nonTaxPayers = persons.filter { it.totalAssetValue(assets) < taxThreshold }
-
-        // Bây giờ truyền các danh sách này sang ResultsScreen hoặc xử lý chúng theo nhu cầu của bạn
-    }
 
     private fun setupRecyclerViews() {
         // Setup LayoutManagers for RecyclerViews
@@ -103,20 +77,21 @@ class MainActivity : AppCompatActivity() {
         apiService.getAssets().enqueue(object : Callback<AssetResponse> {
             override fun onResponse(call: Call<AssetResponse>, response: Response<AssetResponse>) {
                 if (response.isSuccessful) {
-                    assets = response.body()?.data ?: emptyList() // Lưu danh sách tài sản vào biến
+                    assets = response.body()?.data ?: emptyList()
                     assetAdapter = AssetAdapter(assets)
                     binding.assetsRecyclerView.adapter = assetAdapter
+                    fetchPersons()  //gọi fetchPersons sau khi assets đã sẵn sàng
                 } else {
                     Toast.makeText(this@MainActivity, "Failed to load assets", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<AssetResponse>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                showError("Error: ${t.message}")
             }
         })
     }
-
+    
     private fun fetchPersons() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://testapi.io/api/")
@@ -125,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
         val apiService = retrofit.create(ApiService::class.java)
         apiService.getPersons().enqueue(object : Callback<PersonResponse> {
-            override fun onResponse(call: Call<PersonResponse>, response: Response<PersonResponse>) {
+            override fun onResponse(call: Call<PersonResponse>, response: Response<PersonResponse>) =
                 if (response.isSuccessful) {
                     persons = response.body()?.data ?: emptyList()
                     personAdapter = PersonAdapter(persons, assets,false)
@@ -133,12 +108,30 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this@MainActivity, "Failed to load persons", Toast.LENGTH_SHORT).show()
                 }
-            }
 
             override fun onFailure(call: Call<PersonResponse>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                showError("Error: ${t.message}")
             }
         })
     }
+
+    private fun navigateToResultsScreen() {
+        val taxThreshold = 1_000_000_000
+        val taxPayers = persons.filter { it.totalAssetValue(assets) >= taxThreshold }
+        val nonTaxPayers = persons.filter { it.totalAssetValue(assets) < taxThreshold }
+
+        val intent = Intent(this@MainActivity, ResultsScreen::class.java).apply {
+            putExtra("totalPeople", persons.size)
+            putExtra("taxPayers", Gson().toJson(taxPayers))
+            putExtra("nonTaxPayers", Gson().toJson(nonTaxPayers))
+            putExtra("assets", Gson().toJson(assets))
+        }
+        startActivity(intent)
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+    }
+
 
 }
