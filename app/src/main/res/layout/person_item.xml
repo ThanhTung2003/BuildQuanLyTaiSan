@@ -17,6 +17,7 @@
     <TextView
         android:id="@+id/personName"
         android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:text="Phim hay: "
         android:textColor="@color/black"
         android:textSize="18sp"
